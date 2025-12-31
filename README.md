@@ -1,2 +1,2 @@
-# checkdotnet524
-524 Feature request implementation checking
+# checkdotnet518
+Checking and Testing for FR 524
