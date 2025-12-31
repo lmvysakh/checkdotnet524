@@ -17,11 +17,15 @@ jobs:
         run: |
           /usr/sbin/softwareupdate --install-rosetta --agree-to-license
 
-      # Install ARM64 .NET SDK using Homebrew
+      # Install ARM64 .NET SDK using Homebrew, then validate
       - name: Install .NET 8.0 SDK (ARM64)
         run: |
           brew install --cask dotnet-sdk
           dotnet --list-sdks
+          if ! dotnet --list-sdks | grep -q "8.0"; then
+            echo "arm64 SDK installation failed!"
+            exit 1
+          fi
 
       # Use the setup-dotnet action from the PR branch (implementing arch selection)
       - name: Setup .NET SDKs (arm64 and x64)
