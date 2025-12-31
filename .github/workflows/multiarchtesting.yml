@@ -52,15 +52,13 @@ jobs:
             exit 1
           fi
 
-      - name: Verify x64 .NET SDK installation
+      - name: Verify x64 .NET SDK installation (via Rosetta)
         run: |
-          echo "Checking x64 .NET SDKs via all possible paths..."
-          for DOTNET_PATH in "$HOME/.dotnet/x64/dotnet" "/usr/local/share/dotnet/x64/dotnet" "/opt/hostedtoolcache/dotnet/x64/dotnet"; do
-            if [ -x "$DOTNET_PATH" ]; then
-              "$DOTNET_PATH" --list-sdks
-              "$DOTNET_PATH" --info
-              exit 0
-            fi
-          done
-          echo "x64 dotnet binary not found!"
-          exit 1
+          echo "Checking for x64 .NET SDK via Rosetta..."
+          if arch -x86_64 dotnet --list-sdks | grep -q "8.0"; then
+            arch -x86_64 dotnet --info
+            echo "x64 .NET SDK is available via Rosetta."
+          else
+            echo "x64 SDK not found via Rosetta!"
+            exit 1
+          fi
