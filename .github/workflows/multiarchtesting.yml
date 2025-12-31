@@ -34,7 +34,7 @@ jobs:
       - name: Install .NET 8.0 SDK (x64, Rosetta)
         run: |
           /usr/sbin/softwareupdate --install-rosetta --agree-to-license
-          SDK_URL="https://download.visualstudio.microsoft.com/download/pr/3b7e8e01-56e8-48ee-9f86-8e2ed0913e80/2bbbc456fd04646b3ad76ee3b03a5717/dotnet-sdk-8.0.100-osx-x64.pkg"
+          SDK_URL="https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.10/dotnet-runtime-8.0.10-osx-x64.pkg"
           curl -L -o dotnet-x64.pkg "$SDK_URL"
           if [[ ! -f "dotnet-x64.pkg" ]] || [[ $(stat -f%z "dotnet-x64.pkg") -lt 100000000 ]]; then
             echo "Download of .NET x64 SDK failed or file size is too small."
