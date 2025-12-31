@@ -14,7 +14,7 @@ jobs:
 
       # Use the setup-dotnet action from the PR branch (implementing arch selection)
       - name: Setup .NET SDKs (arm64 and x64)
-        uses: actions/setup-dotnet@refs/pull/338/merge
+        uses: DataDog/setup-dotnet@architecture2
         with:
           dotnet: |
             - version: '8.0.x'
