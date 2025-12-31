@@ -44,7 +44,7 @@ jobs:
       - name: Use arm64 .NET SDK explicitly via path
         run: |
           echo "arm64 SDK location:"
-          DOTNET_ROOT_ARM64=$(find $RUNNER_TOOL_CACHE/dotnet -type d -name 'arm64' | head -n1)
+          DOTNET_ROOT_ARM64=$(find $HOME/.dotnet -type d -name 'arm64' | head -n1)
           if [ -d "$DOTNET_ROOT_ARM64" ]; then
             "$DOTNET_ROOT_ARM64/dotnet" --version
             "$DOTNET_ROOT_ARM64/dotnet" --info
@@ -52,3 +52,5 @@ jobs:
             echo "arm64 SDK not found!"
             exit 1
           fi
+
+   
