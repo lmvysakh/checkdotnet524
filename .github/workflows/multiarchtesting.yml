@@ -12,6 +12,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Ensure Rosetta is installed to support x64 binaries
+      - name: Install Rosetta 2
+        run: |
+          /usr/sbin/softwareupdate --install-rosetta --agree-to-license
+
+      # Install ARM64 .NET SDK using Homebrew
+      - name: Install .NET 8.0 SDK (ARM64)
+        run: |
+          brew install --cask dotnet-sdk
+          dotnet --list-sdks
+
       # Use the setup-dotnet action from the PR branch (implementing arch selection)
       - name: Setup .NET SDKs (arm64 and x64)
         uses: DataDog/setup-dotnet@architecture2
