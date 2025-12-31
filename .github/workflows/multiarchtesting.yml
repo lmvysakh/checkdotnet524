@@ -17,15 +17,30 @@ jobs:
       #   run: |
       #     /usr/sbin/softwareupdate --install-rosetta --agree-to-license
       
-      # Install Rosetta for x64 emulation and validate the x64 SDK, downloading manually if necessary
+      # # Install Rosetta for x64 emulation and validate the x64 SDK, downloading manually if necessary
+      # - name: Install .NET 8.0 SDK (x64, Rosetta)
+      #   run: |
+      #     /usr/sbin/softwareupdate --install-rosetta --agree-to-license
+      #     if ! arch -x86_64 /usr/local/bin/dotnet --list-sdks 2>/dev/null | grep -q "8.0"; then
+      #       echo "Installing .NET 8.0 SDK for x64 via manual download..."
+      #       curl -L -o dotnet-x64.pkg https://download.visualstudio.microsoft.com/download/pr/8be9db3b-07b0-409f-a49b-c56c515bb24c/76bdb7e7f46ddafecfb81cb8d49adf99/dotnet-sdk-8.0.100-osx-x64.pkg
+      #       sudo installer -pkg dotnet-x64.pkg -target /
+      #     fi
+      #     if ! arch -x86_64 /usr/local/bin/dotnet --list-sdks | grep -q "8.0"; then
+      #       echo "x64 SDK installation failed!"
+      #       exit 1
+      #     fi
+
       - name: Install .NET 8.0 SDK (x64, Rosetta)
         run: |
           /usr/sbin/softwareupdate --install-rosetta --agree-to-license
-          if ! arch -x86_64 /usr/local/bin/dotnet --list-sdks 2>/dev/null | grep -q "8.0"; then
-            echo "Installing .NET 8.0 SDK for x64 via manual download..."
-            curl -L -o dotnet-x64.pkg https://download.visualstudio.microsoft.com/download/pr/8be9db3b-07b0-409f-a49b-c56c515bb24c/76bdb7e7f46ddafecfb81cb8d49adf99/dotnet-sdk-8.0.100-osx-x64.pkg
-            sudo installer -pkg dotnet-x64.pkg -target /
+          SDK_URL="https://download.visualstudio.microsoft.com/download/pr/3b7e8e01-56e8-48ee-9f86-8e2ed0913e80/2bbbc456fd04646b3ad76ee3b03a5717/dotnet-sdk-8.0.100-osx-x64.pkg"
+          curl -L -o dotnet-x64.pkg "$SDK_URL"
+          if [[ ! -f "dotnet-x64.pkg" ]] || [[ $(stat -f%z "dotnet-x64.pkg") -lt 100000000 ]]; then
+            echo "Download of .NET x64 SDK failed or file size is too small."
+            exit 1
           fi
+          sudo installer -pkg dotnet-x64.pkg -target /
           if ! arch -x86_64 /usr/local/bin/dotnet --list-sdks | grep -q "8.0"; then
             echo "x64 SDK installation failed!"
             exit 1
