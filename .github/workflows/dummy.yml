@@ -50,3 +50,34 @@ jobs:
             echo "arm64 SDK not found!"
             exit 1
           fi
+
+      - name: Verify arm64 .NET SDK installation
+        run: |
+          echo "Installed SDKs:"
+          dotnet --list-sdks
+          if dotnet --list-sdks | grep -q "8.0"; then
+            dotnet --info
+          else
+            echo "arm64 SDK not found!"
+            exit 1
+          fi
+
+
+      - name: Verify x64 .NET SDK installation
+        env:
+          DOTNET_ROOT: $RUNNER_TOOL_CACHE/dotnet/x64
+        run: |
+          echo "Verifying x64 .NET SDK installation..."
+          if find $RUNNER_TOOL_CACHE/dotnet -type d -name 'x64' 2>/dev/null | grep .; then
+            DOTNET_X64_PATH=$(find $RUNNER_TOOL_CACHE/dotnet -type d -name 'x64' | head -n1)
+            if [ -x "$DOTNET_X64_PATH/dotnet" ]; then
+              "$DOTNET_X64_PATH/dotnet" --list-sdks
+              "$DOTNET_X64_PATH/dotnet" --info
+            else
+              echo "x64 dotnet binary not found!"
+              exit 1
+            fi
+          else
+            echo "x64 SDK directory not found!"
+            exit 1
+          fi

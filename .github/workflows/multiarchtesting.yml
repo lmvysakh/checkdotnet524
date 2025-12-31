@@ -53,20 +53,14 @@ jobs:
           fi
 
       - name: Verify x64 .NET SDK installation
-        env:
-          DOTNET_ROOT: $RUNNER_TOOL_CACHE/dotnet/x64
         run: |
-          echo "Verifying x64 .NET SDK installation..."
-          if find $RUNNER_TOOL_CACHE/dotnet -type d -name 'x64' 2>/dev/null | grep .; then
-            DOTNET_X64_PATH=$(find $RUNNER_TOOL_CACHE/dotnet -type d -name 'x64' | head -n1)
-            if [ -x "$DOTNET_X64_PATH/dotnet" ]; then
-              "$DOTNET_X64_PATH/dotnet" --list-sdks
-              "$DOTNET_X64_PATH/dotnet" --info
-            else
-              echo "x64 dotnet binary not found!"
-              exit 1
+          echo "Checking x64 .NET SDKs via all possible paths..."
+          for DOTNET_PATH in "$HOME/.dotnet/x64/dotnet" "/usr/local/share/dotnet/x64/dotnet" "/opt/hostedtoolcache/dotnet/x64/dotnet"; do
+            if [ -x "$DOTNET_PATH" ]; then
+              "$DOTNET_PATH" --list-sdks
+              "$DOTNET_PATH" --info
+              exit 0
             fi
-          else
-            echo "x64 SDK directory not found!"
-            exit 1
-          fi
+          done
+          echo "x64 dotnet binary not found!"
+          exit 1
