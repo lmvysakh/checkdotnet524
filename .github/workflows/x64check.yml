@@ -1,7 +1,7 @@
 name: Setup x64 .NET SDK on Apple Silicon macOS
 on:
   workflow_dispatch:
-   push:
+  push:
     branches:
       - main
 jobs:
