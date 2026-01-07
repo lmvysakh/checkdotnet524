@@ -25,12 +25,43 @@ jobs:
       - name: Show default dotnet (should be arm64)
         run: dotnet --info
 
+      - name: Print Environment
+        run: env | grep DOTNET
+
+      - name: Debug .NET ARM64 Env Variable
+        run: |
+          echo "DOTNET_ROOT_ARM64: $DOTNET_ROOT_ARM64"
+          if [ -z "$DOTNET_ROOT_ARM64" ]; then
+            echo "DOTNET_ROOT_ARM64 is not set!"
+            exit 1
+          fi
+          ls -l "$DOTNET_ROOT_ARM64" || echo "Directory missing"
+          ls -l "$DOTNET_ROOT_ARM64/dotnet" || echo "dotnet binary missing"
+
       - name: Show .NET arm64 SDK details
         run: |
           echo "DOTNET_ROOT_ARM64: $DOTNET_ROOT_ARM64"
+          if [ -z "$DOTNET_ROOT_ARM64" ] || [ ! -x "$DOTNET_ROOT_ARM64/dotnet" ]; then
+            echo "Error: DOTNET_ROOT_ARM64 or its dotnet binary is missing!"
+            exit 1
+          fi
           "$DOTNET_ROOT_ARM64/dotnet" --info
+
+      - name: Debug .NET X64 Env Variable
+        run: |
+          echo "DOTNET_ROOT_X64: $DOTNET_ROOT_X64"
+          if [ -z "$DOTNET_ROOT_X64" ]; then
+            echo "DOTNET_ROOT_X64 is not set!"
+            exit 1
+          fi
+          ls -l "$DOTNET_ROOT_X64" || echo "Directory missing"
+          ls -l "$DOTNET_ROOT_X64/dotnet" || echo "dotnet binary missing"
 
       - name: Show .NET x64 SDK details
         run: |
           echo "DOTNET_ROOT_X64: $DOTNET_ROOT_X64"
+          if [ -z "$DOTNET_ROOT_X64" ] || [ ! -x "$DOTNET_ROOT_X64/dotnet" ]; then
+            echo "Error: DOTNET_ROOT_X64 or its dotnet binary is missing!"
+            exit 1
+          fi
           "$DOTNET_ROOT_X64/dotnet" --info
