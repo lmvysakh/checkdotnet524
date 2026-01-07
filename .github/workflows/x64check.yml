@@ -31,7 +31,7 @@ jobs:
       # -- Find and demonstrate the x64 dotnet binary --
       - name: Find and run the x64 dotnet binary via Rosetta
         run: |
-          X64_DOTNET=$(find $RUNNER_TOOL_CACHE/dotnet -type f -name dotnet -path '*/x64/*' | head -n1)
+          X64_DOTNET=$(find "${RUNNER_TOOL_CACHE:-$HOME/.dotnet}/dotnet" -type f -name dotnet -path '*/x64/*' 2>/dev/null | head -n1)
           if [ -x "$X64_DOTNET" ]; then
             echo "Found x64 dotnet binary at: $X64_DOTNET"
             arch -x86_64 "$X64_DOTNET" --version
