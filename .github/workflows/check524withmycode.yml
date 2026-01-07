@@ -22,6 +22,14 @@ jobs:
             - version: 8.0.x
               arch: x64
 
+      # --- Added Step: Ensure DOTNET_ROOT_ARM64 is set if missing ---
+      - name: Manually set DOTNET_ROOT_ARM64 if missing
+        run: |
+          if [ -z "$DOTNET_ROOT_ARM64" ]; then
+            export DOTNET_ROOT_ARM64="$HOME/.dotnet-arm64"
+            echo "DOTNET_ROOT_ARM64=$DOTNET_ROOT_ARM64" >> $GITHUB_ENV
+          fi
+
       - name: Show default dotnet (should be arm64)
         run: dotnet --info
 
