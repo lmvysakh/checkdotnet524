@@ -1,0 +1,14 @@
+name: Test Java x64 on M1
+
+on: [workflow_dispatch]
+
+jobs:
+  test-java-x64:
+    runs-on: macos-14
+    steps:
+      - run: java -version
+      - run: arch -x86_64 java -version
+      - run: |
+          echo 'public class Hello { public static void main(String[] args) { System.out.println("Hello, X64-Java!"); } }' > Hello.java
+          arch -x86_64 javac Hello.java
+          arch -x86_64 java Hello

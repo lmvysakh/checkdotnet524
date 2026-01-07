@@ -1,9 +1,9 @@
 name: Setup x64 .NET SDK on Apple Silicon macOS
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 jobs:
   setup-dotnet-x64:
     runs-on: macos-14 # Runs on Apple Silicon (M1/M2) hardware
@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.0.x'
-          architecture: 'x64'
+          # architecture: 'x64'
 
       # -- Find and demonstrate the x64 dotnet binary --
       - name: Find and run the x64 dotnet binary via Rosetta

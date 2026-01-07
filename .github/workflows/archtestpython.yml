@@ -1,0 +1,13 @@
+name: Test Python x64 on M1
+
+on: [workflow_dispatch]
+
+jobs:
+  test-python-x64:
+    runs-on: macos-14
+    steps:
+      - run: python3 --version
+      - run: arch -x86_64 python3 --version
+      - run: |
+          echo 'print("Hello from X64-Python!")' > hello.py
+          arch -x86_64 python3 hello.py

@@ -1,0 +1,13 @@
+name: Test Go x64 on M1
+
+on: [workflow_dispatch]
+
+jobs:
+  test-go-x64:
+    runs-on: macos-14
+    steps:
+      - run: go version
+      - run: arch -x86_64 go version
+      - run: |
+          echo 'package main; import "fmt"; func main() { fmt.Println("Hello from x64-Go!") }' > hello.go
+          arch -x86_64 go run hello.go

@@ -1,0 +1,13 @@
+name: Test Node x64 on M1
+
+on: [workflow_dispatch]
+
+jobs:
+  test-node-x64:
+    runs-on: macos-14
+    steps:
+      - run: node --version
+      - run: arch -x86_64 node --version
+      - run: |
+          echo 'console.log("Hello from X64-Node.js!")' > hello.js
+          arch -x86_64 node hello.js
