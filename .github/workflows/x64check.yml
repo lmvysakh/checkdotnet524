@@ -30,7 +30,7 @@ jobs:
       # -- Find and demonstrate the x64 dotnet binary --
       - name: Find and run the x64 dotnet binary via Rosetta
         run: |
-          X64_DOTNET="$DOTNET_ROOT/dotnet"
+          export X64_DOTNET="${DOTNET_ROOT}/dotnet"
           if [ -x "$X64_DOTNET" ]; then
             echo "Found x64 dotnet binary at: $X64_DOTNET"
             arch -x86_64 /bin/bash -c "$X64_DOTNET --version"
@@ -39,3 +39,5 @@ jobs:
             echo "ERROR: x64 dotnet binary not found at $X64_DOTNET"
             exit 1
           fi
+        env:
+          DOTNET_ROOT: ${{ steps.setup-dotnet.outputs.dotnet-root }}
