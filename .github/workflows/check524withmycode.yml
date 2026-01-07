@@ -1,0 +1,35 @@
+name: My Branch code check for Test Multi-Arch .NET SDK Installation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  multi_arch_dotnet:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup both x64 and arm64 .NET SDKs
+        uses: lmvysakh/setup-dotnet@FR_524
+        with:
+          dotnet: |
+            - version: 8.0.x
+              arch: arm64
+            - version: 8.0.x
+              arch: x64
+
+      - name: Show default dotnet (should be arm64)
+        run: dotnet --info
+
+      - name: Show .NET arm64 SDK details
+        run: |
+          echo "DOTNET_ROOT_ARM64: $DOTNET_ROOT_ARM64"
+          "$DOTNET_ROOT_ARM64/dotnet" --info
+
+      - name: Show .NET x64 SDK details
+        run: |
+          echo "DOTNET_ROOT_X64: $DOTNET_ROOT_X64"
+          "$DOTNET_ROOT_X64/dotnet" --info

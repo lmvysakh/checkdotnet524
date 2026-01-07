@@ -1,9 +1,9 @@
 name: Setup x64 .NET SDK on Apple Silicon macOS
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 jobs:
   setup-dotnet-x64:
     runs-on: macos-14 # Runs on Apple Silicon (M1/M2) hardware
