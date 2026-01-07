@@ -34,8 +34,8 @@ jobs:
           X64_DOTNET="$DOTNET_ROOT/dotnet"
           if [ -x "$X64_DOTNET" ]; then
             echo "Found x64 dotnet binary at: $X64_DOTNET"
-            arch -x86_64 "$X64_DOTNET" --version
-            arch -x86_64 "$X64_DOTNET" --info
+            arch -x86_64 /bin/bash -c "$X64_DOTNET --version"
+            arch -x86_64 /bin/bash -c "$X64_DOTNET --info"
           else
             echo "ERROR: x64 dotnet binary not found at $X64_DOTNET"
             exit 1
