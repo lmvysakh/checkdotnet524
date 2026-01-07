@@ -15,6 +15,7 @@ jobs:
       - name: Setup both x64 and arm64 .NET SDKs
         uses: lmvysakh/setup-dotnet@FR_524
         with:
+          global-json-file: ./global.json
           dotnet: |
             - version: 8.0.x
               arch: arm64
