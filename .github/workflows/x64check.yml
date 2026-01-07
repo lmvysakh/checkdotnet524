@@ -26,6 +26,7 @@ jobs:
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.0.x'
+          architecture: 'x64'
 
       # -- Find and demonstrate the x64 dotnet binary --
       - name: Find and run the x64 dotnet binary via Rosetta
