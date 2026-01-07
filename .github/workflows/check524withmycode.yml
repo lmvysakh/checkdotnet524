@@ -2,9 +2,9 @@ name: My Branch code check for Test Multi-Arch .NET SDK Installation
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   multi_arch_dotnet:
