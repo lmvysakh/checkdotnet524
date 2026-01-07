@@ -40,4 +40,4 @@ jobs:
             exit 1
           fi
         env:
-          DOTNET_ROOT: ${{ steps.setup-dotnet.outputs.dotnet-root }}
+          DOTNET_ROOT: ${{ steps.setup_dotnet.outputs.dotnet-root }}
