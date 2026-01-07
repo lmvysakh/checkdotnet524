@@ -2,9 +2,9 @@ name: Test Multi-Arch .NET SDK Installation
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   multi_arch_dotnet:
@@ -12,10 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # # Ensure Rosetta is installed to support x64 binaries
-      # - name: Install Rosetta 2
-      #   run: |
-      #     /usr/sbin/softwareupdate --install-rosetta --agree-to-license
+      # Ensure Rosetta is installed to support x64 binaries
+      - name: Install Rosetta 2
+        run: |
+          /usr/sbin/softwareupdate --install-rosetta --agree-to-license
       
       # # Install Rosetta for x64 emulation and validate the x64 SDK, downloading manually if necessary
       # - name: Install .NET 8.0 SDK (x64, Rosetta)
@@ -31,20 +31,20 @@ jobs:
       #       exit 1
       #     fi
 
-      - name: Install .NET 8.0 SDK (x64, Rosetta)
-        run: |
-          /usr/sbin/softwareupdate --install-rosetta --agree-to-license
-          SDK_URL="https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.10/dotnet-runtime-8.0.10-osx-x64.pkg"
-          curl -L -o dotnet-x64.pkg "$SDK_URL"
-          if [[ ! -f "dotnet-x64.pkg" ]] || [[ $(stat -f%z "dotnet-x64.pkg") -lt 100000000 ]]; then
-            echo "Download of .NET x64 SDK failed or file size is too small."
-            exit 1
-          fi
-          sudo installer -pkg dotnet-x64.pkg -target /
-          if ! arch -x86_64 /usr/local/bin/dotnet --list-sdks | grep -q "8.0"; then
-            echo "x64 SDK installation failed!"
-            exit 1
-          fi
+      # - name: Install .NET 8.0 SDK (x64, Rosetta)
+      #   run: |
+      #     /usr/sbin/softwareupdate --install-rosetta --agree-to-license
+      #     SDK_URL="https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.10/dotnet-runtime-8.0.10-osx-x64.pkg"
+      #     curl -L -o dotnet-x64.pkg "$SDK_URL"
+      #     if [[ ! -f "dotnet-x64.pkg" ]] || [[ $(stat -f%z "dotnet-x64.pkg") -lt 100000000 ]]; then
+      #       echo "Download of .NET x64 SDK failed or file size is too small."
+      #       exit 1
+      #     fi
+      #     sudo installer -pkg dotnet-x64.pkg -target /
+      #     if ! arch -x86_64 /usr/local/bin/dotnet --list-sdks | grep -q "8.0"; then
+      #       echo "x64 SDK installation failed!"
+      #       exit 1
+      #     fi
 
       # # Install ARM64 .NET SDK using Homebrew, then validate
       # - name: Install .NET 8.0 SDK (ARM64)

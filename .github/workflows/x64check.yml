@@ -1,0 +1,42 @@
+name: Setup x64 .NET SDK on Apple Silicon macOS
+on:
+  workflow_dispatch:
+   push:
+    branches:
+      - main
+jobs:
+  setup-dotnet-x64:
+    runs-on: macos-14 # Runs on Apple Silicon (M1/M2) hardware
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # -- Install Rosetta if not present (idempotent) --
+      - name: Ensure Rosetta 2 is installed
+        run: |
+          if ! /usr/bin/pgrep oahd >/dev/null 2>&1; then
+            echo "Rosetta not found. Installing Rosetta..."
+            sudo softwareupdate --install-rosetta --agree-to-license
+          else
+            echo "Rosetta is already installed."
+          fi
+
+      # -- Setup .NET 8 SDK x64 using official setup-dotnet v5 --
+      - name: Setup .NET 8 x64 SDK (official release)
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.x'
+          architecture: 'x64'
+
+      # -- Find and demonstrate the x64 dotnet binary --
+      - name: Find and run the x64 dotnet binary via Rosetta
+        run: |
+          X64_DOTNET=$(find $RUNNER_TOOL_CACHE/dotnet -type f -name dotnet -path '*/x64/*' | head -n1)
+          if [ -x "$X64_DOTNET" ]; then
+            echo "Found x64 dotnet binary at: $X64_DOTNET"
+            arch -x86_64 "$X64_DOTNET" --version
+            arch -x86_64 "$X64_DOTNET" --info
+          else
+            echo "ERROR: x64 dotnet binary not found!"
+            exit 1
+          fi
