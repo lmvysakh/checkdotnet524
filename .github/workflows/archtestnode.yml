@@ -6,8 +6,17 @@ jobs:
   test-node-x64:
     runs-on: macos-14
     steps:
-      - run: node --version
-      - run: arch -x86_64 node --version
-      - run: |
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Node.js version (native)
+        run: node --version
+      - name: Node.js version (x64)
+        run: arch -x86_64 node --version
+      - name: Run Hello JS (x64)
+        run: |
           echo 'console.log("Hello from X64-Node.js!")' > hello.js
           arch -x86_64 node hello.js
