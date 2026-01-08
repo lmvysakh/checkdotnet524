@@ -6,9 +6,17 @@ jobs:
   test-java-x64:
     runs-on: macos-14
     steps:
-      - run: java -version
-      - run: arch -x86_64 java -version
-      - run: |
+     - name: Checkout code
+       uses: actions/checkout@v4
+     - name: Set up Java
+       uses: actions/setup-java@v4
+       with:
+        java-version: '17'
+        distribution: 'temurin'
+        architecture: x64   
+     - run: java -version
+     - run: arch -x86_64 java -version
+     - run: |
           echo 'public class Hello { public static void main(String[] args) { System.out.println("Hello, X64-Java!"); } }' > Hello.java
           arch -x86_64 javac Hello.java
           arch -x86_64 java Hello
