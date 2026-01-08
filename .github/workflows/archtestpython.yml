@@ -6,17 +6,32 @@ jobs:
   test-python-x64:
     runs-on: macos-14
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Python version (native)
-        run: python3 --version
-      - name: Python version (x64)
-        run: arch -x86_64 python3 --version
-      - name: Run Hello Python (x64)
-        run: |
+      - run: python3 --version
+      - run: arch -x86_64 python3 --version
+      - run: |
           echo 'print("Hello from X64-Python!")' > hello.py
           arch -x86_64 python3 hello.py
+
+
+# name: Test Python x64 on M1
+
+# on: [workflow_dispatch]
+
+# jobs:
+#   test-python-x64:
+#     runs-on: macos-14
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+#       - name: Set up Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: '3.11'
+#       - name: Python version (native)
+#         run: python3 --version
+#       - name: Python version (x64)
+#         run: arch -x86_64 python3 --version
+#       - name: Run Hello Python (x64)
+#         run: |
+#           echo 'print("Hello from X64-Python!")' > hello.py
+#           arch -x86_64 python3 hello.py
