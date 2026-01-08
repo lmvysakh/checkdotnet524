@@ -6,6 +6,12 @@ jobs:
   test-go-x64:
     runs-on: macos-14
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
       - run: go version
       - run: arch -x86_64 go version
       - run: |
