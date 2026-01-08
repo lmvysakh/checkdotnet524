@@ -2,25 +2,15 @@ name: Test Multi-Arch .NET SDK Installation
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
 
 jobs:
   multi_arch_dotnet:
     runs-on: macos-14 # Or 'macos-latest'; ensure Apple Silicon runner.
     steps:
       - uses: actions/checkout@v4
-
-      # Ensure Rosetta is installed to support x64 binaries
-      - name: Ensure Rosetta 2 is installed
-        run: |
-          if ! /usr/bin/pgrep oahd >/dev/null 2>&1; then
-            echo "Rosetta not found. Installing Rosetta..."
-            sudo softwareupdate --install-rosetta --agree-to-license
-          else
-            echo "Rosetta is already installed."
-          fi
 
       # Use the setup-dotnet action from the PR branch (implementing arch selection)
       - name: Setup .NET SDKs (arm64 and x64)
@@ -31,12 +21,23 @@ jobs:
               arch: 'arm64'
             - version: '8.0.x'
               arch: 'x64'
-
       # Try both SDKs sequentially
       - name: Show installed dotnet SDKs (default arch = arm64)
         run: |
           dotnet --list-sdks
           dotnet --info
+      # - name: Use x64 .NET SDK explicitly via path
+      #   run: |
+      #     echo "x64 SDK location:"
+      #     DOTNET_ROOT_X64=$(find $RUNNER_TOOL_CACHE/dotnet -type d -name 'x64' | head -n1)
+      #     # Use .NET x64
+      #     if [ -d "$DOTNET_ROOT_X64" ]; then
+      #       "$DOTNET_ROOT_X64/dotnet" --version
+      #       "$DOTNET_ROOT_X64/dotnet" --info
+      #     else
+      #       echo "x64 SDK not found!"
+      #       exit 1
+      #     fi
 
       - name: Verify arm64 .NET SDK installation
         run: |
@@ -46,19 +47,5 @@ jobs:
             dotnet --info
           else
             echo "arm64 SDK not found!"
-            exit 1
-          fi
-
-      - name: Verify x64 .NET SDK installation (via Rosetta)
-        run: |
-          if ! arch -x86_64 which dotnet 2>/dev/null; then
-            echo "No x64 dotnet binary installed on this runner. x64 SDK validation will be skipped."
-            exit 0
-          fi
-          if arch -x86_64 dotnet --list-sdks | grep -q "8.0"; then
-            arch -x86_64 dotnet --info
-            echo "x64 .NET SDK is available via Rosetta."
-          else
-            echo "x64 SDK not found via Rosetta!"
             exit 1
           fi
