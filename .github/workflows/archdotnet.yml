@@ -11,11 +11,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup x64 .NET SDK
-        uses: actions/setup-dotnet@main
+        uses: lmvysakh/setup-dotnet@arch_support
         with:
-          dotnet: |
-            - version: 8.0.x
-              arch: x64
+          dotnet-version: '8.0.x'
+          architecture: 'x64'
 
       - name: Show .NET x64 SDK details
         run: |
