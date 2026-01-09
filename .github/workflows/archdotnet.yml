@@ -1,0 +1,34 @@
+name: Dotnet Test x64 .NET SDK on Apple Silicon
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-x64-dotnet:
+    runs-on: macos-15-intel
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup x64 .NET SDK
+        uses: actions/setup-dotnet@main
+        with:
+          dotnet: |
+            - version: 8.0.x
+              arch: x64
+
+      - name: Show .NET x64 SDK details
+        run: |
+          echo "DOTNET_ROOT_X64: $DOTNET_ROOT_X64"
+          "$DOTNET_ROOT_X64/dotnet" --info
+
+      - name: Create sample project
+        run: |
+          "$DOTNET_ROOT_X64/dotnet" new console -o HelloX64
+          cd HelloX64
+          "$DOTNET_ROOT_X64/dotnet" build
+
+      - name: Run sample project (x64)
+        run: |
+          cd HelloX64
+          "$DOTNET_ROOT_X64/dotnet" run
