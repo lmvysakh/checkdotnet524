@@ -5,7 +5,7 @@ on:
 
 jobs:
   test-x64-dotnet:
-    runs-on: macos-15-intel
+    runs-on: macos-14
 
     steps:
       - uses: actions/checkout@v4
