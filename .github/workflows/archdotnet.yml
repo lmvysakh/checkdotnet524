@@ -17,7 +17,7 @@ jobs:
         uses: lmvysakh/setup-dotnet@setup_dotnet_arch
         with:
           dotnet-version: '8.0.x'
-          architecture: 'x64'
+          architecture: 'arm64'
 
       - name: Ensure DOTNET_ROOT_X64 is set
         run: |
