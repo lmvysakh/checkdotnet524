@@ -2,9 +2,9 @@ name: Dotnet Test x64 .NET SDK on Apple Silicon
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   test-x64-dotnet:

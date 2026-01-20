@@ -1,0 +1,24 @@
+name: Dotnet checking with PR
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-x64-dotnet:
+    runs-on: macos-14
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup x64 .NET SDK
+        uses: aparnajyothi-y/setup-dotnet@copilot/add-dotnet-architecture-support
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Show installed dotnet SDKs 
+        run: |
+          dotnet --list-sdks
+          dotnet --info
