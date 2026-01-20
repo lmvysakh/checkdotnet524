@@ -16,7 +16,9 @@ jobs:
       - name: Setup x64 .NET SDK
         uses: aparnajyothi-y/setup-dotnet@copilot/add-dotnet-architecture-support
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: | 
+            version: 8.0.x, arch: x64
+            version: 8.0.x, arch: arm64
 
       - name: Show installed dotnet SDKs 
         run: |
