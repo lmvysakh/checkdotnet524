@@ -13,15 +13,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup x64 .NET SDK
+      - name: Setup x64 and arm64 .NET SDKs
         uses: aparnajyothi-y/setup-dotnet@copilot/add-dotnet-architecture-support
         with:
-          dotnet-version: | 
-            6.0.x
-            version: 8.0.x, arch: x64
-            version: 8.0.x, arch: arm64
+          dotnet: |
+            - version: 8.0.x
+              arch: x64
+            - version: 8.0.x
+              arch: arm64
 
-      - name: Show installed dotnet SDKs 
+      - name: Show default dotnet SDKs and info (usually arm64)
         run: |
           dotnet --list-sdks
           dotnet --info
+
+      - name: Show arm64 .NET SDK and info
+        run: |
+          echo "DOTNET_ROOT_ARM64: $DOTNET_ROOT_ARM64"
+          "$DOTNET_ROOT_ARM64/dotnet" --list-sdks
+          "$DOTNET_ROOT_ARM64/dotnet" --info
+
+      - name: Show x64 .NET SDK and info
+        run: |
+          echo "DOTNET_ROOT_X64: $DOTNET_ROOT_X64"
+          "$DOTNET_ROOT_X64/dotnet" --list-sdks
+          "$DOTNET_ROOT_X64/dotnet" --info
