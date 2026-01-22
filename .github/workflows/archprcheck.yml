@@ -25,11 +25,11 @@ jobs:
           dotnet --list-sdks
           dotnet --info
 
-      - name: Show arm64 .NET SDK and info
-        run: |
-          echo "DOTNET_ROOT_ARM64: $DOTNET_ROOT_ARM64"
-          "$DOTNET_ROOT_ARM64/dotnet" --list-sdks
-          "$DOTNET_ROOT_ARM64/dotnet" --info
+      # - name: Show arm64 .NET SDK and info
+      #   run: |
+      #     echo "DOTNET_ROOT_ARM64: $DOTNET_ROOT_ARM64"
+      #     "$DOTNET_ROOT_ARM64/dotnet" --list-sdks
+      #     "$DOTNET_ROOT_ARM64/dotnet" --info
 
       - name: Show x64 .NET SDK and info
         run: |
