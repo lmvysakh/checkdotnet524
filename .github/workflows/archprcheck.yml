@@ -58,6 +58,11 @@ jobs:
       #     "$DOTNET_ROOT_X64/dotnet" --list-sdks
       #     "$DOTNET_ROOT_X64/dotnet" --info
 
+      - name: Inspect dotnet binary architectures
+        run: |
+          file "$DOTNET_ROOT_X64/dotnet"
+          file "$DOTNET_ROOT_ARM64/dotnet"
+
       - name: Show .NET x64 SDK and info (under Rosetta/x64)
         run: |
           echo "DOTNET_ROOT_X64: $DOTNET_ROOT_X64"
