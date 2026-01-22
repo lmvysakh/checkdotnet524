@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  test-x64-dotnet:
+  test-pr:
     runs-on: macos-14
 
     steps:
@@ -17,7 +17,8 @@ jobs:
         uses: aparnajyothi-y/setup-dotnet@copilot/add-dotnet-architecture-support
         with:
           dotnet-version: | 
-            6.0.x
+            version: 8.0.x, arch: x64
+            version: 8.0.x, arch: arm64
             version: 8.0.x, arch: x64
 
       - name: Show installed dotnet SDKs 
