@@ -1,4 +1,4 @@
-name: Dotnet checking with PR
+name: Dotnet checking with my branch changes
 
 on:
   workflow_dispatch:
