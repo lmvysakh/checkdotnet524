@@ -8,7 +8,7 @@ on:
 
 jobs:
   test-x64-dotnet:
-    runs-on: macos-15-intel
+    runs-on: macos-14
 
     steps:
       - uses: actions/checkout@v4
@@ -17,7 +17,7 @@ jobs:
         uses: lmvysakh/setup-dotnet@FR_524_arch_support
         with:
           dotnet-version: '8.0.416'
-          architecture: 'x64'
+          architecture: 'arm64'
 
       - name: Ensure DOTNET_ROOT_X64 is set
         run: |
