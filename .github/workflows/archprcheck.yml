@@ -52,19 +52,19 @@ jobs:
           echo "DOTNET_ROOT_X64: $DOTNET_ROOT_X64"
           echo "DOTNET_ROOT_X64=$(dirname $(which dotnet))" >> $GITHUB_ENV
 
-      # - name: Show x64 .NET SDK and info
-      #   run: |
-      #     echo "DOTNET_ROOT_X64: $DOTNET_ROOT_X64"
-      #     "$DOTNET_ROOT_X64/dotnet" --list-sdks
-      #     "$DOTNET_ROOT_X64/dotnet" --info
+      - name: Show x64 .NET SDK and info
+        run: |
+          echo "DOTNET_ROOT_X64: $DOTNET_ROOT_X64"
+          "$DOTNET_ROOT_X64/dotnet" --list-sdks
+          "$DOTNET_ROOT_X64/dotnet" --info
 
       - name: Inspect dotnet binary architectures
         run: |
           file "$DOTNET_ROOT_X64/dotnet"
           file "$DOTNET_ROOT_ARM64/dotnet"
 
-      - name: Show .NET x64 SDK and info (under Rosetta/x64)
-        run: |
-          echo "DOTNET_ROOT_X64: $DOTNET_ROOT_X64"
-          arch -x86_64 "$DOTNET_ROOT_X64/dotnet" --list-sdks
-          arch -x86_64 "$DOTNET_ROOT_X64/dotnet" --info
+      # - name: Show .NET x64 SDK and info (under Rosetta/x64)
+      #   run: |
+      #     echo "DOTNET_ROOT_X64: $DOTNET_ROOT_X64"
+      #     arch -x86_64 "$DOTNET_ROOT_X64/dotnet" --list-sdks
+      #     arch -x86_64 "$DOTNET_ROOT_X64/dotnet" --info
