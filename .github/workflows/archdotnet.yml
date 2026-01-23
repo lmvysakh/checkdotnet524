@@ -2,22 +2,22 @@ name: Dotnet Test x64 .NET SDK on Apple Silicon
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
 
 jobs:
   test-x64-dotnet:
-    runs-on: macos-14
+    runs-on: macos-15-intel
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup x64 .NET SDK
-        uses: lmvysakh/setup-dotnet@setup_dotnet_arch
+        uses: lmvysakh/setup-dotnet@FR_524_arch_support
         with:
           dotnet-version: '8.0.x'
-          architecture: 'arm64'
+          architecture: 'x64'
 
       - name: Ensure DOTNET_ROOT_X64 is set
         run: |
