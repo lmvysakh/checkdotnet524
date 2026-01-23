@@ -43,4 +43,4 @@ jobs:
       - name: Run sample project (x64)
         run: |
           cd HelloX64
-          "$DOTNET_ROOT_X64/dotnet" run
+          "$DOTNET_ROOT_X64/dotnet" run 
