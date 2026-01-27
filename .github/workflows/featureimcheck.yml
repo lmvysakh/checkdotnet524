@@ -17,7 +17,6 @@ jobs:
         uses: lmvysakh/setup-dotnet@FR_524_arch_support
         with:
           dotnet-version:  | 
-            version: 8.0.x, arch: x64
             version: 8.0.x, arch: arm64
 
      
