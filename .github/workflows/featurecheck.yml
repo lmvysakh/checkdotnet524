@@ -1,13 +1,13 @@
-name: Dotnet checking with my branch changes
+name: Feature implementation testing
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
 
 jobs:
-  test-pr:
+  test-feature:
     runs-on: macos-14
 
     steps:
@@ -16,9 +16,7 @@ jobs:
       - name: Setup x64 .NET SDK
         uses: lmvysakh/setup-dotnet@FR_524_arch_support
         with:
-          dotnet-version:  | 
-            version: 8.0.x, arch: x64
-            version: 8.0.x, arch: arm64
+          dotnet-version: '8.0.x'
 
      
       - name: Show installed dotnet SDKs 
@@ -58,13 +56,5 @@ jobs:
           "$DOTNET_ROOT_X64/dotnet" --list-sdks
           "$DOTNET_ROOT_X64/dotnet" --info
 
-      - name: Inspect dotnet binary architectures
-        run: |
-          file "$DOTNET_ROOT_X64/dotnet"
-          file "$DOTNET_ROOT_ARM64/dotnet"
 
-      # - name: Show .NET x64 SDK and info (under Rosetta/x64)
-      #   run: |
-      #     echo "DOTNET_ROOT_X64: $DOTNET_ROOT_X64"
-      #     arch -x86_64 "$DOTNET_ROOT_X64/dotnet" --list-sdks
-      #     arch -x86_64 "$DOTNET_ROOT_X64/dotnet" --info
+ 
