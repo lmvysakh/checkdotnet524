@@ -8,20 +8,20 @@ on:
 
 jobs:
   test-feature:
-    strategy:
-        matrix:
-        architecture: [x64, arm64]
-        runs-on: macos-14
+    runs-on: macos-14
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup .NET SDK
         uses: lmvysakh/setup-dotnet@FR_524_arch_support
         with:
-          dotnet-version: '8.0.416'
-          architecture: ${{ matrix.architecture }}
+          dotnet-version: |
+            6.0.x
+            version: 8.0.x, arch: arm64
 
 
+     
       - name: Show installed dotnet SDKs 
         run: |
           dotnet --list-sdks
