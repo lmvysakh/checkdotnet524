@@ -16,7 +16,8 @@ jobs:
       - name: Setup x64 .NET SDK
         uses: lmvysakh/setup-dotnet@FR_524_arch_support
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version:  | 
+            version: 8.0.x, arch: arm64
 
      
       - name: Show installed dotnet SDKs 
