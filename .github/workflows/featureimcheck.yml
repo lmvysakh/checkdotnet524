@@ -17,8 +17,8 @@ jobs:
         uses: lmvysakh/setup-dotnet@FR_524_arch_support
         with:
           dotnet-version:  | 
-            version: 8.0.416, arch: x64
-            version: 8.0.416, arch: arm64
+            version: '8.0.416', arch: x64
+            version: '8.0.416', arch: arm64
 
      
       - name: Show installed dotnet SDKs 
