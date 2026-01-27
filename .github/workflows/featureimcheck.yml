@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup x64 .NET SDK
+      - name: Setup .NET SDK
         uses: lmvysakh/setup-dotnet@FR_524_arch_support
         with:
           dotnet-version:  | 
