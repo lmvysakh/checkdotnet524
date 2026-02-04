@@ -15,9 +15,12 @@ jobs:
 
       - name: Setup .NET SDK
         uses: lmvysakh/setup-dotnet@FR_524_arch_support
+        env:
+        PROCESSOR_ARCHITECTURE: x86
+        DOTNET_INSTALL_DIR: C:\Program Files (x86)\dotnet
         with:
           dotnet-version: '8.0.x'
-          architecture: x64
+          architecture: x86
 
       - name: Show installed dotnet SDKs 
         run: |
