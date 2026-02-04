@@ -17,7 +17,7 @@ jobs:
         uses: DataDog/setup-dotnet@architecture2
         with:
           dotnet-version: '8.0.x'
-          architecture: arm64
+          architecture: x64
 
       - name: Show installed dotnet SDKs 
         run: |
