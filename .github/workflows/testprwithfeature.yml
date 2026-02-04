@@ -1,10 +1,10 @@
-name: Feature implementation testing
+name: Testing Feature implementation with PR 338 and Internal PR
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
 
 jobs:
   test-feature:
@@ -16,11 +16,9 @@ jobs:
       - name: Setup .NET SDK
         uses: lmvysakh/setup-dotnet@FR_524_arch_support
         with:
-          dotnet-version: |
-            6.0.x
-            version: 8.0.x, arch: arm64
+          dotnet-version: '8.0.x'
+          architecture: arm64
 
-     
       - name: Show installed dotnet SDKs 
         run: |
           dotnet --list-sdks
