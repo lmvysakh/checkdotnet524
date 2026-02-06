@@ -1,10 +1,10 @@
-name: Testing Feature implementation with PR 338 and Internal PR
+name: Testing architecture feature with my code changes
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
 
 jobs:
   test-feature:
@@ -16,7 +16,9 @@ jobs:
       - name: Setup .NET SDK
         uses: lmvysakh/setup-dotnet@support_architecture
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: |
+            8.0.x
+            9.0.x
           architecture: x64
 
       - name: Show installed dotnet SDKs 
