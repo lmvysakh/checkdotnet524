@@ -17,7 +17,7 @@ jobs:
         uses: lmvysakh/setup-dotnet@support_architecture
         with:
           dotnet-version: '8.0.x'
-          architecture: x7jk
+          architecture: "x64"
 
       - name: Show installed dotnet SDKs 
         run: |
