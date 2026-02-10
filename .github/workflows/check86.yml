@@ -1,0 +1,25 @@
+name: x86 publish 
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Create tiny app
+        shell: pwsh
+        run: |
+          mkdir probe
+          cd probe
+          dotnet new console
+
+      - name: Publish win-x86
+        shell: pwsh
+        run: |
+          cd probe
+          dotnet publish -c Release -r win-x86 --self-contained false
