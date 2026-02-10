@@ -2,6 +2,9 @@ name: x86 publish
 
 on:
   workflow_dispatch:
+   push:
+    branches:
+      - main
 
 jobs:
   probe:
@@ -22,4 +25,5 @@ jobs:
         shell: pwsh
         run: |
           cd probe
-          dotnet publish -c Release -r win-x86 --self-contained false
+          dotnet publish -c Release -r win-x86 --self-contained true
+          
