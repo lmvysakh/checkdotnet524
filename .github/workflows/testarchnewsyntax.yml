@@ -19,15 +19,7 @@ jobs:
           dotnet-version: |
             8.0.x
             9.0.x
-          architecture: arm64
-      
-      - name: Setup .NET SDK 
-        uses: lmvysakh/setup-dotnet@support_architecture
-        with:
-          dotnet-version: |
-            8.0.x
-            9.0.x
-          architecture: x64
+          architecture: unsupported
 
       - name: Show installed dotnet SDKs 
         run: |
