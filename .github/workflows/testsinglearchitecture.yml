@@ -13,6 +13,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+      - name: Force fresh .NET install location (job-local) + clear caches
+        shell: powershell
+        run: |
+          $dotnetRoot = Join-Path $env:GITHUB_WORKSPACE ".dotnet"
+          "DOTNET_ROOT=$dotnetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "$dotnetRoot" | Out-File -FilePath $env:GITHUB_PATH -Append
+
+          # Remove any previous job-local install (in case of retries on the same workspace)
+          if (Test-Path $dotnetRoot) { Remove-Item -Recurse -Force $dotnetRoot }
+
+          # These are not what causes "already installed", but safe to clear for consistency
+          dotnet nuget locals all --clear 2>$null
+          if (Test-Path "$env:LOCALAPPDATA\NuGet\Cache") { Remove-Item -Recurse -Force "$env:LOCALAPPDATA\NuGet\Cache" -ErrorAction SilentlyContinue }
+          if (Test-Path "$env:USERPROFILE\.nuget\packages") { Remove-Item -Recurse -Force "$env:USERPROFILE\.nuget\packages" -ErrorAction SilentlyContinue }
+
       - uses: lmvysakh/setup-dotnet@support_architecture
         with:
          architecture : 'x86'
