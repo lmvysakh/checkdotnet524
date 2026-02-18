@@ -1,4 +1,4 @@
-name: Test architecture - Self hosted - 10.0.102
+name: Test architecture - Self hosted 
 
 on: 
  push:
@@ -20,14 +20,18 @@ jobs:
         shell: powershell
         run: |
           $dotnetRoot = Join-Path $env:GITHUB_WORKSPACE ".dotnet"
+          
+          # Force dotnet-install.ps1 to install here (this is the key bit)
+          "DOTNET_INSTALL_DIR=$dotnetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+          # Also set DOTNET_ROOT so 'dotnet' uses this location
           "DOTNET_ROOT=$dotnetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+          # Ensure this dotnet is found first
           "$dotnetRoot" | Out-File -FilePath $env:GITHUB_PATH -Append
 
+          # Guarantee a fresh install every run
           if (Test-Path $dotnetRoot) { Remove-Item -Recurse -Force $dotnetRoot }
-
-          # Clear NuGet caches without requiring dotnet to exist yet
-          if (Test-Path "$env:LOCALAPPDATA\NuGet\Cache") { Remove-Item -Recurse -Force "$env:LOCALAPPDATA\NuGet\Cache" -ErrorAction SilentlyContinue }
-          if (Test-Path "$env:USERPROFILE\.nuget\packages") { Remove-Item -Recurse -Force "$env:USERPROFILE\.nuget\packages" -ErrorAction SilentlyContinue }
 
 
       - uses: lmvysakh/setup-dotnet@support_architecture
