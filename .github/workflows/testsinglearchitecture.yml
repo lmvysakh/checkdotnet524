@@ -21,7 +21,7 @@ jobs:
                   
       # Force the session to use the toolcache dotnet, not C:\Program Files\dotnet
       - name: Force DOTNET_ROOT and PATH
-        shell: pwsh
+        shell: powershell
         run: |
           $dotnetRoot = Join-Path $env:RUNNER_TOOL_CACHE "dotnet"
           "DOTNET_ROOT=$dotnetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append
