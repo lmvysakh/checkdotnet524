@@ -1,0 +1,26 @@
+name: Test architecture - Self hosted - 10.0.102
+
+on: 
+ push:
+
+jobs:
+  Architecture:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+            os: [self-hosted]
+            arch: ['x64', 'arm64','x86']
+
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - uses: lmvysakh/setup-dotnet@support_architecture
+        with:
+         architecture : ${{ matrix.arch }}
+         dotnet-version: | 
+                  9.0.308
+                  10.0.101
+      - run: dotnet --info
