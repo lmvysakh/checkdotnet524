@@ -38,7 +38,7 @@ jobs:
         with:
          architecture : ${{ matrix.arch }}
          dotnet-version: | 
-                  9.0.308
-                  10.0.101
+                  10.0.102
+                  10.0.103
 
       - run: dotnet --info
