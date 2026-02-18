@@ -35,7 +35,7 @@ jobs:
         with:
          architecture : 'x86'
          dotnet-version: | 
-                  9.0.308
+                  10.0.102
                   
       # Force the session to use the toolcache dotnet, not C:\Program Files\dotnet
       - name: Force DOTNET_ROOT and PATH
