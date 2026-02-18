@@ -36,8 +36,5 @@ jobs:
          dotnet-version: | 
                   9.0.308
                   10.0.101
-      - name: Clear dotnet/nuget locals (now that dotnet exists)
-        shell: powershell
-        run: dotnet nuget locals all --clear
-        
+
       - run: dotnet --info
