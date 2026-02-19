@@ -1,0 +1,46 @@
+name: ci-dotnet-runtime-matrix
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  runtime:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install .NET Runtime (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          RUNTIME: dotnet
+          RUNTIME_VERSION: 10.0.2
+        run: |
+          $DotnetRootDesired = Join-Path $env:ProgramFiles "dotnet"
+          # Fallback if not writable
+          try {
+            New-Item -ItemType Directory -Force -Path $DotnetRootDesired | Out-Null
+            $DotnetRoot = $DotnetRootDesired
+          } catch {
+            $DotnetRoot = Join-Path $env:RUNNER_TEMP "dotnet"
+            New-Item -ItemType Directory -Force -Path $DotnetRoot | Out-Null
+          }
+          $Arch = "x86"
+          Invoke-WebRequest https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
+          # -Runtime dotnet => downloads Runtime/.../dotnet-runtime-<ver>-win-<arch>.zip
+          .\dotnet-install.ps1 `
+            -Runtime $env:RUNTIME `
+            -Version $env:RUNTIME_VERSION `
+            -InstallDir $DotnetRoot `
+            -Architecture $Arch `
+            -Verbose
+          "DOTNET_ROOT=$DotnetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append
+          $DotnetRoot | Out-File -FilePath $env:GITHUB_PATH -Append
+      - name: dotnet --info
+        run: dotnet --info
