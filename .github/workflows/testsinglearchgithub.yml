@@ -1,0 +1,61 @@
+name: Test single architecture - GitHub hosted
+
+on: 
+ push:
+
+jobs:
+  Archcheck:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+            os: [windows-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      # - name: Clear cache
+      #   shell: powershell
+      #   run: |
+      #       # Remove the dotnet install directory
+      #       $dotnetPaths = @(
+      #         "C:\Program Files\dotnet",
+      #         "C:\Program Files (x86)\dotnet",
+      #         "$env:LOCALAPPDATA\Microsoft\dotnet",
+      #         "$env:USERPROFILE\.dotnet"
+      #       )
+      #       foreach ($path in $dotnetPaths) {
+      #         if (Test-Path $path) {
+      #           Write-Host "Removing: $path"
+      #           Remove-Item -Recurse -Force $path
+      #         } else {
+      #           Write-Host "Not found: $path"
+      #         }
+      #       }
+
+      #       # Also clear the tool cache used by setup-dotnet action
+      #       $toolCache = "$env:RUNNER_TOOL_CACHE"
+      #       if ($toolCache -and (Test-Path $toolCache)) {
+      #         $dotnetToolCache = Join-Path $toolCache "dotnet"
+      #         if (Test-Path $dotnetToolCache) {
+      #           Write-Host "Removing tool cache: $dotnetToolCache"
+      #           Remove-Item -Recurse -Force $dotnetToolCache
+      #         }
+      #       }
+
+      - uses: lmvysakh/setup-dotnet@support_architecture
+        with:
+         architecture : 'x86'
+         dotnet-version: | 
+                  10.0.102
+                  
+      # Force the session to use the toolcache dotnet, not C:\Program Files\dotnet
+      - name: Force DOTNET_ROOT and PATH
+        shell: powershell
+        run: |
+          $dotnetRoot = Join-Path $env:RUNNER_TOOL_CACHE "dotnet"
+          "DOTNET_ROOT=$dotnetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "$dotnetRoot"            | Out-File -FilePath $env:GITHUB_PATH -Append
+      
+          # Diagnostics
+          where.exe dotnet
+          dotnet --info
