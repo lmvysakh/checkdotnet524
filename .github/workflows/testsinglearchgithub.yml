@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-            os: [windows-latest]
+            os: [self-hosted]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
