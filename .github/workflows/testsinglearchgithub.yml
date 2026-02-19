@@ -42,73 +42,73 @@ jobs:
       #         }
       #       }
 
-      - name: Clear cache
-        shell: powershell
-        run: |
-          # Discover and remove all .NET install locations dynamically
-          $dotnetPaths = @()
+      # - name: Clear cache
+      #   shell: powershell
+      #   run: |
+      #     # Discover and remove all .NET install locations dynamically
+      #     $dotnetPaths = @()
 
-          # Default install locations derived from environment variables
-          if ($env:PROGRAMFILES)        { $dotnetPaths += Join-Path $env:PROGRAMFILES "dotnet" }
-          if ($env:LOCALAPPDATA)        { $dotnetPaths += Join-Path $env:LOCALAPPDATA "Microsoft\dotnet" }
-          if ($env:USERPROFILE)         { $dotnetPaths += Join-Path $env:USERPROFILE ".dotnet" }
+      #     # Default install locations derived from environment variables
+      #     if ($env:PROGRAMFILES)        { $dotnetPaths += Join-Path $env:PROGRAMFILES "dotnet" }
+      #     if ($env:LOCALAPPDATA)        { $dotnetPaths += Join-Path $env:LOCALAPPDATA "Microsoft\dotnet" }
+      #     if ($env:USERPROFILE)         { $dotnetPaths += Join-Path $env:USERPROFILE ".dotnet" }
 
-          # ProgramFiles(x86) needs special handling in YAML
-          $pfx86 = [Environment]::GetEnvironmentVariable("ProgramFiles(x86)")
-          if ($pfx86) { $dotnetPaths += Join-Path $pfx86 "dotnet" }
+      #     # ProgramFiles(x86) needs special handling in YAML
+      #     $pfx86 = [Environment]::GetEnvironmentVariable("ProgramFiles(x86)")
+      #     if ($pfx86) { $dotnetPaths += Join-Path $pfx86 "dotnet" }
 
-          # Also clear DOTNET_INSTALL_DIR if it's set to something custom
-          if ($env:DOTNET_INSTALL_DIR -and ($dotnetPaths -notcontains $env:DOTNET_INSTALL_DIR)) {
-            $dotnetPaths += $env:DOTNET_INSTALL_DIR
-          }
+      #     # Also clear DOTNET_INSTALL_DIR if it's set to something custom
+      #     if ($env:DOTNET_INSTALL_DIR -and ($dotnetPaths -notcontains $env:DOTNET_INSTALL_DIR)) {
+      #       $dotnetPaths += $env:DOTNET_INSTALL_DIR
+      #     }
 
-          foreach ($p in $dotnetPaths) {
-            if (Test-Path $p) {
-              Write-Host "Removing: $p"
-              Remove-Item -Recurse -Force $p
-            } else {
-              Write-Host "Not found (skip): $p"
-            }
-          }
+      #     foreach ($p in $dotnetPaths) {
+      #       if (Test-Path $p) {
+      #         Write-Host "Removing: $p"
+      #         Remove-Item -Recurse -Force $p
+      #       } else {
+      #         Write-Host "Not found (skip): $p"
+      #       }
+      #     }
 
-          # Clear the runner tool cache for dotnet
-          if ($env:RUNNER_TOOL_CACHE) {
-            Get-ChildItem -Path $env:RUNNER_TOOL_CACHE -Directory -Filter "dotnet*" -ErrorAction SilentlyContinue |
-              ForEach-Object {
-                Write-Host "Removing tool cache: $($_.FullName)"
-                Remove-Item -Recurse -Force $_.FullName
-              }
-          }
+      #     # Clear the runner tool cache for dotnet
+      #     if ($env:RUNNER_TOOL_CACHE) {
+      #       Get-ChildItem -Path $env:RUNNER_TOOL_CACHE -Directory -Filter "dotnet*" -ErrorAction SilentlyContinue |
+      #         ForEach-Object {
+      #           Write-Host "Removing tool cache: $($_.FullName)"
+      #           Remove-Item -Recurse -Force $_.FullName
+      #         }
+      #     }
 
-          # Unset DOTNET_ROOT so the next step doesn't pick up the old path
-          "DOTNET_ROOT=" | Out-File -FilePath $env:GITHUB_ENV -Append
-          "DOTNET_INSTALL_DIR=" | Out-File -FilePath $env:GITHUB_ENV -Append
+      #     # Unset DOTNET_ROOT so the next step doesn't pick up the old path
+      #     "DOTNET_ROOT=" | Out-File -FilePath $env:GITHUB_ENV -Append
+      #     "DOTNET_INSTALL_DIR=" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-          # Verify dotnet is gone
-          $dotnetExe = Get-Command dotnet -ErrorAction SilentlyContinue
-          if ($dotnetExe) {
-            Write-Host "WARNING: dotnet still found at: $($dotnetExe.Source)"
-          } else {
-            Write-Host "OK: dotnet fully removed - clean slate"
-          }
+      #     # Verify dotnet is gone
+      #     $dotnetExe = Get-Command dotnet -ErrorAction SilentlyContinue
+      #     if ($dotnetExe) {
+      #       Write-Host "WARNING: dotnet still found at: $($dotnetExe.Source)"
+      #     } else {
+      #       Write-Host "OK: dotnet fully removed - clean slate"
+      #     }
 
   
-      - uses: lmvysakh/setup-dotnet@support_architecture
+      - uses: lmvysakh/setup-dotnet@support_architecture_new
         with:
          architecture : 'x86'
          dotnet-version: | 
                   10.0.102
                   
       # Force the session to use the toolcache dotnet, not C:\Program Files\dotnet
-      # - name: Force DOTNET_ROOT and PATH
-      #   shell: powershell
-      #   run: |
-      #     $dotnetRoot = Join-Path $env:RUNNER_TOOL_CACHE "dotnet"
-      #     "DOTNET_ROOT=$dotnetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append
-      #     "$dotnetRoot"            | Out-File -FilePath $env:GITHUB_PATH -Append
+      - name: Force DOTNET_ROOT and PATH
+        shell: powershell
+        run: |
+          $dotnetRoot = Join-Path $env:RUNNER_TOOL_CACHE "dotnet"
+          "DOTNET_ROOT=$dotnetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "$dotnetRoot"            | Out-File -FilePath $env:GITHUB_PATH -Append
       
-      #     # Diagnostics
-      #     where.exe dotnet
-      #     dotnet --info
+          # Diagnostics
+          where.exe dotnet
+          dotnet --info
 
-      - run: dotnet --info
+      # - run: dotnet --info
