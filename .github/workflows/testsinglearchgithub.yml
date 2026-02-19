@@ -42,6 +42,10 @@ jobs:
       #         }
       #       }
 
+      - name: Clear cache
+        shell: powershell
+        run: Remove-Item -Recurse -Force $env:USERPROFILE\.dotnet
+
       - uses: lmvysakh/setup-dotnet@support_architecture
         with:
          architecture : 'x86'
