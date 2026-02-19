@@ -17,22 +17,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Force fresh .NET install location (job-local) + clear caches
-        shell: powershell
-        run: |
-          $dotnetRoot = Join-Path $env:GITHUB_WORKSPACE ".dotnet"
+      # - name: Force fresh .NET install location (job-local) + clear caches
+      #   shell: powershell
+      #   run: |
+      #     $dotnetRoot = Join-Path $env:GITHUB_WORKSPACE ".dotnet"
           
-          # Force dotnet-install.ps1 to install here (this is the key bit)
-          "DOTNET_INSTALL_DIR=$dotnetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append
+      #     # Force dotnet-install.ps1 to install here (this is the key bit)
+      #     "DOTNET_INSTALL_DIR=$dotnetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-          # Also set DOTNET_ROOT so 'dotnet' uses this location
-          "DOTNET_ROOT=$dotnetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append
+      #     # Also set DOTNET_ROOT so 'dotnet' uses this location
+      #     "DOTNET_ROOT=$dotnetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-          # Ensure this dotnet is found first
-          "$dotnetRoot" | Out-File -FilePath $env:GITHUB_PATH -Append
+      #     # Ensure this dotnet is found first
+      #     "$dotnetRoot" | Out-File -FilePath $env:GITHUB_PATH -Append
 
-          # Guarantee a fresh install every run
-          if (Test-Path $dotnetRoot) { Remove-Item -Recurse -Force $dotnetRoot }
+      #     # Guarantee a fresh install every run
+      #     if (Test-Path $dotnetRoot) { Remove-Item -Recurse -Force $dotnetRoot }
 
 
       - uses: lmvysakh/setup-dotnet@support_architecture
