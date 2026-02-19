@@ -1,7 +1,8 @@
-name: Test architecture - Self hosted 
+name: Test matrix architecture - Self hosted 
 
 on: 
- push:
+#  push:
+ workflow_dispatch:
 
 jobs:
   Architecture:
