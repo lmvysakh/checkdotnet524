@@ -46,43 +46,34 @@ jobs:
         shell: powershell
         run: |
           $dotnetPaths = @()
-
-          if ($env:PROGRAMFILES) { $dotnetPaths += Join-Path $env:PROGRAMFILES "dotnet" }
-          if ($env:{"ProgramFiles(x86)"}) { $dotnetPaths += Join-Path $env:{"ProgramFiles(x86)"} "dotnet" }
-          if ($env:LOCALAPPDATA) { $dotnetPaths += Join-Path $env:LOCALAPPDATA "Microsoft\dotnet" }
-          if ($env:USERPROFILE) { $dotnetPaths += Join-Path $env:USERPROFILE ".dotnet" }
-
+          if ($env:PROGRAMFILES)        { $dotnetPaths += Join-Path $env:PROGRAMFILES "dotnet" }
+          if (${env:ProgramFiles(x86)}) { $dotnetPaths += Join-Path ${env:ProgramFiles(x86)} "dotnet" }
+          if ($env:LOCALAPPDATA)        { $dotnetPaths += Join-Path $env:LOCALAPPDATA "Microsoft\dotnet" }
+          if ($env:USERPROFILE)         { $dotnetPaths += Join-Path $env:USERPROFILE ".dotnet" }
           if ($env:DOTNET_INSTALL_DIR -and ($dotnetPaths -notcontains $env:DOTNET_INSTALL_DIR)) {
             $dotnetPaths += $env:DOTNET_INSTALL_DIR
           }
-
           foreach ($p in $dotnetPaths) {
             if (Test-Path $p) {
               Write-Host "Removing: $p"
               Remove-Item -Recurse -Force $p
-            }
-            else {
+            } else {
               Write-Host "Not found (skip): $p"
             }
           }
-
           if ($env:RUNNER_TOOL_CACHE) {
-            Get-ChildItem -Path $env:RUNNER_TOOL_CACHE -Directory -Filter "dotnet*" -ErrorAction SilentlyContinue |
-              ForEach-Object {
-                Write-Host "Removing tool cache: $($_.FullName)"
-                Remove-Item -Recurse -Force $_.FullName
-              }
+            Get-ChildItem -Path $env:RUNNER_TOOL_CACHE -Directory -Filter "dotnet*" -ErrorAction SilentlyContinue | ForEach-Object {
+              Write-Host "Removing tool cache: $($_.FullName)"
+              Remove-Item -Recurse -Force $_.FullName
+            }
           }
-
-          "DOTNET_ROOT=" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "DOTNET_ROOT="        | Out-File -FilePath $env:GITHUB_ENV -Append
           "DOTNET_INSTALL_DIR=" | Out-File -FilePath $env:GITHUB_ENV -Append
-
           $dotnetExe = Get-Command dotnet -ErrorAction SilentlyContinue
           if ($dotnetExe) {
             Write-Host "dotnet still found at: $($dotnetExe.Source)"
-          }
-          else {
-            Write-Host "dotnet fully removed - clean slate"
+          } else {
+            Write-Host "dotnet fully removed — clean slate"
           }
   
       - uses: lmvysakh/setup-dotnet@support_architecture
