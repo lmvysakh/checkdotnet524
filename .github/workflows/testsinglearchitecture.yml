@@ -16,11 +16,30 @@ jobs:
       - name: Clear cache
         shell: powershell
         run: |
-            $dotnetDir = Join-Path $env:USERPROFILE ".dotnet"
-            if (Test-Path $dotnetDir) {
-              Remove-Item -Recurse -Force $dotnetDir
-            } else {
-              Write-Host "No cache to clear at $dotnetDir"
+            # Remove the dotnet install directory
+            $dotnetPaths = @(
+              "C:\Program Files\dotnet",
+              "C:\Program Files (x86)\dotnet",
+              "$env:LOCALAPPDATA\Microsoft\dotnet",
+              "$env:USERPROFILE\.dotnet"
+            )
+            foreach ($path in $dotnetPaths) {
+              if (Test-Path $path) {
+                Write-Host "Removing: $path"
+                Remove-Item -Recurse -Force $path
+              } else {
+                Write-Host "Not found: $path"
+              }
+            }
+
+            # Also clear the tool cache used by setup-dotnet action
+            $toolCache = "$env:RUNNER_TOOL_CACHE"
+            if ($toolCache -and (Test-Path $toolCache)) {
+              $dotnetToolCache = Join-Path $toolCache "dotnet"
+              if (Test-Path $dotnetToolCache) {
+                Write-Host "Removing tool cache: $dotnetToolCache"
+                Remove-Item -Recurse -Force $dotnetToolCache
+              }
             }
 
       - uses: lmvysakh/setup-dotnet@support_architecture
