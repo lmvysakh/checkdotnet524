@@ -71,9 +71,9 @@ jobs:
           "DOTNET_INSTALL_DIR=" | Out-File -FilePath $env:GITHUB_ENV -Append
           $dotnetExe = Get-Command dotnet -ErrorAction SilentlyContinue
           if ($dotnetExe) {
-            Write-Host "⚠️  dotnet still found at: $($dotnetExe.Source)"
+            Write-Host "dotnet still found at: $($dotnetExe.Source)"
           } else {
-            Write-Host "✅ dotnet fully removed — clean slate"
+            Write-Host "dotnet fully removed — clean slate"
           }
   
       - uses: lmvysakh/setup-dotnet@support_architecture
