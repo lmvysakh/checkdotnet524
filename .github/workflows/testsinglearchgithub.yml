@@ -60,4 +60,4 @@ jobs:
       #     where.exe dotnet
       #     dotnet --info
 
-        run: dotnet --info
+      - run: dotnet --info
