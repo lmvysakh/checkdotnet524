@@ -45,50 +45,49 @@ jobs:
       - name: Clear cache
         shell: powershell
         run: |
-            # Discover and remove all .NET install locations dynamically
-            $dotnetPaths = @()
+          # Discover and remove all .NET install locations dynamically
+          $dotnetPaths = @()
 
-            # Default install locations derived from environment variables
-            if ($env:PROGRAMFILES)        { $dotnetPaths += Join-Path $env:PROGRAMFILES "dotnet" }
-            if (${env:ProgramFiles(x86)}) { $dotnetPaths += Join-Path ${env:ProgramFiles(x86)} "dotnet" }
-            if ($env:LOCALAPPDATA)        { $dotnetPaths += Join-Path $env:LOCALAPPDATA "Microsoft\dotnet" }
-            if ($env:USERPROFILE)         { $dotnetPaths += Join-Path $env:USERPROFILE ".dotnet" }
+          # Default install locations derived from environment variables
+          if ($env:PROGRAMFILES)        { $dotnetPaths += Join-Path $env:PROGRAMFILES "dotnet" }
+          if (${env:ProgramFiles(x86)}) { $dotnetPaths += Join-Path ${env:ProgramFiles(x86)} "dotnet" }
+          if ($env:LOCALAPPDATA)        { $dotnetPaths += Join-Path $env:LOCALAPPDATA "Microsoft\dotnet" }
+          if ($env:USERPROFILE)         { $dotnetPaths += Join-Path $env:USERPROFILE ".dotnet" }
 
-            # Also clear DOTNET_INSTALL_DIR if it's set to something custom
-            if ($env:DOTNET_INSTALL_DIR -and ($dotnetPaths -notcontains $env:DOTNET_INSTALL_DIR)) {
-              $dotnetPaths += $env:DOTNET_INSTALL_DIR
-            }
+          # Also clear DOTNET_INSTALL_DIR if it's set to something custom
+          if ($env:DOTNET_INSTALL_DIR -and ($dotnetPaths -notcontains $env:DOTNET_INSTALL_DIR)) {
+            $dotnetPaths += $env:DOTNET_INSTALL_DIR
+          }
 
-            foreach ($p in $dotnetPaths) {
-              if (Test-Path $p) {
-                Write-Host "Removing: $p"
-                Remove-Item -Recurse -Force $p
-              } else {
-                Write-Host "Not found (skip): $p"
-              }
-            }
-
-            # Clear the runner tool cache for dotnet
-            if ($env:RUNNER_TOOL_CACHE) {
-              Get-ChildItem -Path $env:RUNNER_TOOL_CACHE -Directory -Filter "dotnet*" -ErrorAction SilentlyContinue |
-                ForEach-Object {
-                  Write-Host "Removing tool cache: $($_.FullName)"
-                  Remove-Item -Recurse -Force $_.FullName
-                }
-            }
-
-            # Unset DOTNET_ROOT so the next step doesn't pick up the old path
-            "DOTNET_ROOT="       | Out-File -FilePath $env:GITHUB_ENV -Append
-            "DOTNET_INSTALL_DIR=" | Out-File -FilePath $env:GITHUB_ENV -Append
-
-            # Verify dotnet is gone
-            $dotnetExe = Get-Command dotnet -ErrorAction SilentlyContinue
-            if ($dotnetExe) {
-              Write-Host "⚠️  dotnet still found at: $($dotnetExe.Source)"
+          foreach ($p in $dotnetPaths) {
+            if (Test-Path $p) {
+              Write-Host "Removing: $p"
+              Remove-Item -Recurse -Force $p
             } else {
-              Write-Host "✅ dotnet fully removed — clean slate"
+              Write-Host "Not found (skip): $p"
             }
+          }
 
+          # Clear the runner tool cache for dotnet
+          if ($env:RUNNER_TOOL_CACHE) {
+            Get-ChildItem -Path $env:RUNNER_TOOL_CACHE -Directory -Filter "dotnet*" -ErrorAction SilentlyContinue |
+              ForEach-Object {
+                Write-Host "Removing tool cache: $($_.FullName)"
+                Remove-Item -Recurse -Force $_.FullName
+              }
+          }
+
+          # Unset DOTNET_ROOT so the next step doesn't pick up the old path
+          "DOTNET_ROOT="       | Out-File -FilePath $env:GITHUB_ENV -Append
+          "DOTNET_INSTALL_DIR=" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+          # Verify dotnet is gone
+          $dotnetExe = Get-Command dotnet -ErrorAction SilentlyContinue
+          if ($dotnetExe) {
+            Write-Host "⚠️  dotnet still found at: $($dotnetExe.Source)"
+          } else {
+            Write-Host "✅ dotnet fully removed — clean slate"
+          }
   
       - uses: lmvysakh/setup-dotnet@support_architecture
         with:
