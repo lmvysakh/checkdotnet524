@@ -13,19 +13,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 1st setup-dotnet call: restores NuGet cache (miss on 1st run, hit on 2nd run)
+      # 1st setup-dotnet call: no cache, just install the SDK
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '9.0.x'
+          cache: false
+
+      # Generate the lock file so the cached steps can find it
+      - name: Generate lock file and download packages
+        run: dotnet restore --use-lock-file
+
+      # 2nd setup-dotnet call: cache enabled (seeds cache on 1st run)
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '9.0.x'
           cache: true
 
-      # Populate the NuGet cache so there's something to restore next time
-      - name: Restore dependencies
-        run: dotnet restore
-
-      # 2nd setup-dotnet call: triggers the issue
+      # 3rd setup-dotnet call: triggers the "File exists" issue
       # - 1st workflow run: cache miss → seeds the cache
-      # - 2nd workflow run: cache HIT → potential tar "Cannot open: File exists"
+      # - 2nd workflow run: cache HIT → potential tar "File exists"
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '9.0.x'
