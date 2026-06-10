@@ -2,7 +2,7 @@ name: "Test: Prerelease Edge Cases"
 
 on:
   workflow_dispatch:
-  push
+  push:
 
 jobs:
   valid-preview-standard:
