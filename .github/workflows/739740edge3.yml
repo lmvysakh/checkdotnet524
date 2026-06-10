@@ -6,7 +6,7 @@ on:
 
 jobs:
   va:
-    name: "Valid: 10.0.100-preview.4.25001.1 (standard preview)"
+    name: "Validate 11.0.0-preview.4.26230.115"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -17,7 +17,7 @@ jobs:
       - run: dotnet --list-sdks
 
   
-    name: "Valid: 10.0.100-alpha.1.25001.1 (alpha tag)"
+    name: "Validate 11.0.0-preview.5.26302.115"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -28,7 +28,7 @@ jobs:
       - run: dotnet --list-sdks
 
   
-    name: "Valid: 10.0.100-dev (dev prerelease)"
+    name: "Validate 11.0.0-preview.3.26207.106"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -39,7 +39,7 @@ jobs:
       - run: dotnet --list-sdks
 
   
-    name: "Valid: 8.0.000-preview.1 (zero-band + prerelease)"
+    name: "Validate 11.0.0-preview.4.26230.115"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
