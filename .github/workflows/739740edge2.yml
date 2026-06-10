@@ -2,6 +2,7 @@ name: "Test: Non-latest* rollForward Values"
 
 on:
   workflow_dispatch:
+  push:
 
 jobs:
   # "disable" means use this exact version only, no rolling forward.
