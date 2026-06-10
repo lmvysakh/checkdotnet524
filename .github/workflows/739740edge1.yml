@@ -1,0 +1,49 @@
+name: "Test: No rollForward (Regression)"
+
+on:
+  workflow_dispatch:
+  push: 
+
+jobs:
+  # Full SDK version without rollForward — should install normally
+  no-rollforward-full-version:
+    name: "No rollForward: 8.0.100"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Write global.json
+        run: echo '{"sdk":{"version":"8.0.100"}}' > global.json
+      - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
+        with:
+          global-json-file: global.json
+      - name: Verify SDK installed
+        run: dotnet --list-sdks | grep "8.0"
+
+  # Two-part version without rollForward — used historically (e.g., 3.1)
+  # The action should pass it through to the installer as-is
+  no-rollforward-two-part:
+    name: "No rollForward: 9.0"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Write global.json
+        run: echo '{"sdk":{"version":"9.0"}}' > global.json
+      - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
+        with:
+          global-json-file: global.json
+      - name: Verify SDK installed
+        run: dotnet --list-sdks | grep "9.0"
+
+  # Prerelease without rollForward — should install the exact version
+  no-rollforward-prerelease:
+    name: "No rollForward: 9.0.100-preview.1.24101.2"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Write global.json
+        run: echo '{"sdk":{"version":"9.0.100-preview.1.24101.2"}}' > global.json
+      - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
+        with:
+          global-json-file: global.json
+      - name: Verify SDK installed
+        run: dotnet --list-sdks
