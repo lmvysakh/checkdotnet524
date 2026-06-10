@@ -5,12 +5,12 @@ on:
   push:
 
 jobs:
-  validate-11-preview-4:
-    name: "Validate 11.0.0-preview.4.26230.115"
+  validate-11-preview-2:
+    name: "Validate 11.0.0-preview.2.26159.112"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: echo '{"sdk":{"version":"11.0.0-preview.4.26230.115","rollForward":"latestFeature"}}' > global.json
+      - run: echo '{"sdk":{"version":"11.0.0-preview.2.26159.112","rollForward":"latestFeature"}}' > global.json
       - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
         with:
           global-json-file: global.json
