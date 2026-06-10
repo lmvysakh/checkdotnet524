@@ -1,0 +1,76 @@
+name: "Test: Non-latest* rollForward Values"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  # "disable" means use this exact version only, no rolling forward.
+  # Version must pass regex, then fall through the switch unchanged.
+  rollforward-disable:
+    name: "rollForward: disable (8.0.100)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Write global.json
+        run: echo '{"sdk":{"version":"8.0.100","rollForward":"disable"}}' > global.json
+      - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
+        with:
+          global-json-file: global.json
+      - name: Verify exact version installed
+        run: dotnet --list-sdks | grep "8.0.100"
+
+  # "patch" means allow patch-level roll forward only.
+  rollforward-patch:
+    name: "rollForward: patch (8.0.100)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Write global.json
+        run: echo '{"sdk":{"version":"8.0.100","rollForward":"patch"}}' > global.json
+      - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
+        with:
+          global-json-file: global.json
+      - name: Verify SDK installed
+        run: dotnet --list-sdks | grep "8.0"
+
+  # "feature" means allow feature-band roll forward.
+  rollforward-feature:
+    name: "rollForward: feature (8.0.100)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Write global.json
+        run: echo '{"sdk":{"version":"8.0.100","rollForward":"feature"}}' > global.json
+      - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
+        with:
+          global-json-file: global.json
+      - name: Verify SDK installed
+        run: dotnet --list-sdks | grep "8.0"
+
+  # "minor" means allow minor version roll forward.
+  rollforward-minor:
+    name: "rollForward: minor (8.0.100)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Write global.json
+        run: echo '{"sdk":{"version":"8.0.100","rollForward":"minor"}}' > global.json
+      - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
+        with:
+          global-json-file: global.json
+      - name: Verify SDK installed
+        run: dotnet --list-sdks | grep "8.0"
+
+  # "major" means allow major version roll forward.
+  rollforward-major:
+    name: "rollForward: major (8.0.100)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Write global.json
+        run: echo '{"sdk":{"version":"8.0.100","rollForward":"major"}}' > global.json
+      - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
+        with:
+          global-json-file: global.json
+      - name: Verify SDK installed
+        run: dotnet --list-sdks
