@@ -5,7 +5,7 @@ on:
   push:
 
 jobs:
-  
+  validate-11-preview-4:
     name: "Validate 11.0.0-preview.4.26230.115"
     runs-on: ubuntu-latest
     steps:
@@ -16,7 +16,7 @@ jobs:
           global-json-file: global.json
       - run: dotnet --list-sdks
 
-  
+    validate-11-preview-5:
     name: "Validate 11.0.0-preview.5.26302.115"
     runs-on: ubuntu-latest
     steps:
@@ -27,7 +27,7 @@ jobs:
           global-json-file: global.json
       - run: dotnet --list-sdks
 
-  
+    validate-11-preview-3:  
     name: "Validate 11.0.0-preview.3.26207.106"
     runs-on: ubuntu-latest
     steps:
@@ -38,7 +38,7 @@ jobs:
           global-json-file: global.json
       - run: dotnet --list-sdks
 
-  
+    validate-11-preview-4:
     name: "Validate 11.0.0-preview.4.26230.115"
     runs-on: ubuntu-latest
     steps:
