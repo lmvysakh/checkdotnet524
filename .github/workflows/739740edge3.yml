@@ -6,44 +6,44 @@ on:
 
 jobs:
   validate-11-preview-2:
-    name: "Validate 11.0.0-preview.2.26159.112"
+    name: "Validate 11.0.100-preview.2.26159.112"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: echo '{"sdk":{"version":"11.0.0-preview.2.26159.112","rollForward":"latestFeature"}}' > global.json
+      - run: echo '{"sdk":{"version":"11.0.100-preview.2.26159.112","rollForward":"latestFeature"}}' > global.json
       - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
         with:
           global-json-file: global.json
       - run: dotnet --list-sdks
 
   validate-11-preview-5:
-    name: "Validate 11.0.0-preview.5.26302.115"
+    name: "Validate 11.0.100-preview.5.26302.115"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: echo '{"sdk":{"version":"11.0.0-preview.5.26302.115","rollForward":"latestFeature"}}' > global.json
+      - run: echo '{"sdk":{"version":"11.0.100-preview.5.26302.115","rollForward":"latestFeature"}}' > global.json
       - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
         with:
           global-json-file: global.json
       - run: dotnet --list-sdks
 
   validate-11-preview-3:  
-    name: "Validate 11.0.0-preview.3.26207.106"
+    name: "Validate 11.0.100-preview.3.26207.106"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: echo '{"sdk":{"version":"11.0.0-preview.3.26207.106","rollForward":"latestFeature"}}' > global.json
+      - run: echo '{"sdk":{"version":"11.0.100-preview.3.26207.106","rollForward":"latestFeature"}}' > global.json
       - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
         with:
           global-json-file: global.json
       - run: dotnet --list-sdks
 
   validate-11-preview-4:
-    name: "Validate 11.0.0-preview.4.26230.115"
+    name: "Validate 11.0.100-preview.4.26230.115"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: echo '{"sdk":{"version":"11.0.0-preview.4.26230.115","rollForward":"latestFeature"}}' > global.json
+      - run: echo '{"sdk":{"version":"11.0.100-preview.4.26230.115","rollForward":"latestFeature"}}' > global.json
       - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
         with:
           global-json-file: global.json
