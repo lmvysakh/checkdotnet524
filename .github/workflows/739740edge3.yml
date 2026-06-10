@@ -5,45 +5,45 @@ on:
   push:
 
 jobs:
-  valid-preview-standard:
+  va:
     name: "Valid: 10.0.100-preview.4.25001.1 (standard preview)"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: echo '{"sdk":{"version":"10.0.100-preview.4.25001.1","rollForward":"latestFeature"}}' > global.json
+      - run: echo '{"sdk":{"version":"11.0.0-preview.4.26230.115","rollForward":"latestFeature"}}' > global.json
       - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
         with:
           global-json-file: global.json
       - run: dotnet --list-sdks
 
-  valid-alpha:
+  
     name: "Valid: 10.0.100-alpha.1.25001.1 (alpha tag)"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: echo '{"sdk":{"version":"10.0.100-alpha.1.25001.1","rollForward":"latestFeature"}}' > global.json
+      - run: echo '{"sdk":{"version":"11.0.0-preview.5.26302.115","rollForward":"latestFeature"}}' > global.json
       - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
         with:
           global-json-file: global.json
       - run: dotnet --list-sdks
 
-  valid-dev:
+  
     name: "Valid: 10.0.100-dev (dev prerelease)"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: echo '{"sdk":{"version":"10.0.100-dev","rollForward":"latestFeature"}}' > global.json
+      - run: echo '{"sdk":{"version":"11.0.0-preview.3.26207.106","rollForward":"latestFeature"}}' > global.json
       - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
         with:
           global-json-file: global.json
       - run: dotnet --list-sdks
 
-  valid-zero-band-prerelease:
+  
     name: "Valid: 8.0.000-preview.1 (zero-band + prerelease)"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: echo '{"sdk":{"version":"8.0.000-preview.1","rollForward":"latestFeature"}}' > global.json
+      - run: echo '{"sdk":{"version":"11.0.0-preview.4.26230.115","rollForward":"latestFeature"}}' > global.json
       - uses: priyagupta108/setup-dotnet@validate-global-json-sdk-version
         with:
           global-json-file: global.json
