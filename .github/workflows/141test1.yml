@@ -1,0 +1,197 @@
+name: Test .NET SDK Caching Issue (#141)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  # ─────────────────────────────────────────────
+  # Job 1: Baseline — no SDK caching (demonstrates the issue)
+  # ─────────────────────────────────────────────
+  without-sdk-cache:
+    name: "No SDK Cache — ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Record start time
+        shell: bash
+        run: echo "SETUP_START=$(date +%s)" >> "$GITHUB_ENV"
+
+      - name: Setup .NET 8.0
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Measure .NET 8.0 setup duration
+        shell: bash
+        run: |
+          SETUP_END=$(date +%s)
+          DURATION=$((SETUP_END - SETUP_START))
+          echo "### ⏱ .NET 8.0 Setup Duration: ${DURATION}s" >> "$GITHUB_STEP_SUMMARY"
+          echo "DURATION_SINGLE=$DURATION" >> "$GITHUB_ENV"
+
+      - name: Record start time (multi-version)
+        shell: bash
+        run: echo "SETUP_START_MULTI=$(date +%s)" >> "$GITHUB_ENV"
+
+      - name: Setup .NET 8.0 + 9.0 (multi-version)
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+
+      - name: Measure multi-version setup duration
+        shell: bash
+        run: |
+          SETUP_END_MULTI=$(date +%s)
+          DURATION=$((SETUP_END_MULTI - SETUP_START_MULTI))
+          echo "### ⏱ .NET 8.0 + 9.0 Setup Duration: ${DURATION}s" >> "$GITHUB_STEP_SUMMARY"
+          echo "DURATION_MULTI=$DURATION" >> "$GITHUB_ENV"
+
+      - name: Verify installations
+        shell: bash
+        run: |
+          echo "### Installed SDKs" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          dotnet --list-sdks >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Print summary
+        shell: bash
+        run: |
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "###  Results (No SDK Cache)" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| OS | ${{ matrix.os }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Single SDK setup | ${DURATION_SINGLE}s |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Multi SDK setup | ${DURATION_MULTI}s |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo ">  These durations include a fresh download every run — the core of issue #141." >> "$GITHUB_STEP_SUMMARY"
+
+  # ─────────────────────────────────────────────
+  # Job 2: With manual SDK caching workaround
+  # ─────────────────────────────────────────────
+  with-sdk-cache:
+    name: "With SDK Cache — ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            dotnet-install-dir: .dotnet
+          - os: windows-latest
+            dotnet-install-dir: .dotnet
+          - os: macos-latest
+            dotnet-install-dir: .dotnet
+    env:
+      DOTNET_INSTALL_DIR: ${{ github.workspace }}/${{ matrix.dotnet-install-dir }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Cache .NET SDK installation
+        id: cache-dotnet-sdk
+        uses: actions/cache@v5
+        with:
+          path: ${{ env.DOTNET_INSTALL_DIR }}
+          key: dotnet-sdk-${{ runner.os }}-8.0.x-9.0.x-${{ github.run_number }}
+          restore-keys: |
+            dotnet-sdk-${{ runner.os }}-8.0.x-9.0.x-
+
+      - name: Report cache status
+        shell: bash
+        run: |
+          if [ "${{ steps.cache-dotnet-sdk.outputs.cache-hit }}" == "true" ]; then
+            echo "###  SDK Cache HIT" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "###  SDK Cache MISS (first run or key changed)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Record start time
+        shell: bash
+        run: echo "SETUP_START=$(date +%s)" >> "$GITHUB_ENV"
+
+      - name: Setup .NET 8.0 + 9.0 (with cache)
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+
+      - name: Measure setup duration
+        shell: bash
+        run: |
+          SETUP_END=$(date +%s)
+          DURATION=$((SETUP_END - SETUP_START))
+          echo "### ⏱ .NET 8.0 + 9.0 Setup Duration (cached): ${DURATION}s" >> "$GITHUB_STEP_SUMMARY"
+          echo "DURATION_CACHED=$DURATION" >> "$GITHUB_ENV"
+
+      - name: Verify installations
+        shell: bash
+        run: |
+          echo "### Installed SDKs" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          dotnet --list-sdks >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Print summary
+        shell: bash
+        run: |
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### 📊 Results (With SDK Cache Workaround)" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| OS | ${{ matrix.os }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache hit | ${{ steps.cache-dotnet-sdk.outputs.cache-hit }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Setup duration | ${DURATION_CACHED}s |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "> 💡 On cache hit, setup-dotnet detects the SDK is already present and skips download." >> "$GITHUB_STEP_SUMMARY"
+
+  # ─────────────────────────────────────────────
+  # Job 3: Confirm NuGet cache ≠ SDK cache
+  # ─────────────────────────────────────────────
+  nuget-cache-only:
+    name: "NuGet Cache Only (built-in) — ubuntu-latest"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Record start time
+        run: echo "SETUP_START=$(date +%s)" >> "$GITHUB_ENV"
+
+      - name: Setup .NET with NuGet caching enabled
+        uses: actions/setup-dotnet@v5
+        id: setup
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+          cache: false  # NuGet cache needs lock files; set to true if you have packages.lock.json
+
+      - name: Measure setup duration
+        run: |
+          SETUP_END=$(date +%s)
+          DURATION=$((SETUP_END - SETUP_START))
+          echo "DURATION=$DURATION" >> "$GITHUB_ENV"
+
+      - name: Print summary
+        run: |
+          echo "###  NuGet Cache (built-in \`cache: true\`) ≠ SDK Cache" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Setup duration | ${DURATION}s |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| cache-hit output | ${{ steps.setup.outputs.cache-hit }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo ">  The built-in \`cache: true\` input only caches **NuGet packages** (\`global-packages\` folder)," >> "$GITHUB_STEP_SUMMARY"
+          echo "> **not** the .NET SDK binaries. The SDK is still downloaded fresh every run." >> "$GITHUB_STEP_SUMMARY"
+          echo "> This is the core of issue [#141](https://github.com/actions/setup-dotnet/issues/141)." >> "$GITHUB_STEP_SUMMARY"
