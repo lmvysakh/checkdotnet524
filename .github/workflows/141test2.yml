@@ -23,15 +23,21 @@ jobs:
           dotnet --list-sdks || echo "No dotnet found"
         shell: bash
 
-      - name: Setup .NET 8.0 (observe download)
+      - name: Setup .NET 8.0 (won't observe download)
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.0'
 
-      - name: Setup .NET 9.0 (observe download)
+      - name: Setup .NET 9.0 (won't observe download)
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '9.0'
+
+      - name: Setup .NET 11 (observe download)
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '11.0.100-preview.5.26302.115'
+
 
       - name: Record post-install state
         run: |
