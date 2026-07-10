@@ -1,0 +1,84 @@
+# Workflow demonstrates manual SDK caching using actions/cache.
+name: .NET SDK Install using Actions cache for both pre-installed and non-pre-installed versions
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  install-dotnet:
+    name: Install .NET on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    env:
+      DOTNET_INSTALL_DIR: ${{ github.workspace }}/.dotnet
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Record pre-install state
+        run: |
+          echo " Pre-installed .NET SDKs (system) "
+          dotnet --list-sdks || echo "No dotnet found on PATH"
+          echo ""
+          echo "DOTNET_INSTALL_DIR=${{ env.DOTNET_INSTALL_DIR }}"
+        shell: bash
+
+      - name: Restore .NET SDK from cache
+        id: cache-dotnet-sdk
+        uses: actions/cache@v6
+        with:
+          path: ${{ env.DOTNET_INSTALL_DIR }}
+          key: dotnet-sdk-${{ runner.os }}-8.0-9.0-11.0preview5-v1
+          restore-keys: |
+            dotnet-sdk-${{ runner.os }}-
+
+
+      - name: Setup .NET 8.0 (pre-installed, but installing to custom dir)
+        if: steps.cache-dotnet-sdk.outputs.cache-hit != 'true'
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0'
+
+      - name: Setup .NET 9.0 (pre-installed, but installing to custom dir)
+        if: steps.cache-dotnet-sdk.outputs.cache-hit != 'true'
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '9.0'
+
+      - name: Setup .NET 11 Preview (not pre-installed, will download)
+        if: steps.cache-dotnet-sdk.outputs.cache-hit != 'true'
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '11.0.100-preview.5.26302.115'
+
+
+      - name: Configure .NET environment (on cache hit)
+        if: steps.cache-dotnet-sdk.outputs.cache-hit == 'true'
+        run: |
+          echo "${{ env.DOTNET_INSTALL_DIR }}" >> $GITHUB_PATH
+          echo "DOTNET_ROOT=${{ env.DOTNET_INSTALL_DIR }}" >> $GITHUB_ENV
+        shell: bash
+
+
+      - name: Record post-install state
+        run: |
+          echo " Cache Status "
+          echo "Cache hit: ${{ steps.cache-dotnet-sdk.outputs.cache-hit }}"
+          echo ""
+          echo " Installed .NET SDKs "
+          dotnet --list-sdks
+          echo ""
+          echo " Dotnet version "
+          dotnet --version
+          echo ""
+          echo " Dotnet location "
+          which dotnet || where dotnet
+          echo ""
+          echo " DOTNET_ROOT "
+          echo "$DOTNET_ROOT"
+        shell: bash
+
+   
