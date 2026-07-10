@@ -1,6 +1,6 @@
 # Workflow demonstrates that .NET SDK installations are re-downloaded every run.
 # Run this twice with no code changes — both times will show the SDK being installed.
-name: Test - .NET SDK Install for pre-installed versions
+name: Test - .NET SDK Install for pre-installed and non-pre installed versions
 
 on:
   workflow_dispatch:
