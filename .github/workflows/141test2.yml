@@ -1,0 +1,40 @@
+# Workflow demonstrates that .NET SDK installations are re-downloaded every run.
+# Run this twice with no code changes — both times will show the SDK being installed.
+name: Test - .NET SDK Install (No Cache)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  install-dotnet:
+    name: Install .NET on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Record pre-install state
+        run: |
+          echo "=Pre-installed .NET SDKs ="
+          dotnet --list-sdks || echo "No dotnet found"
+        shell: bash
+
+      - name: Setup .NET 8.0 (observe download)
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0'
+
+      - name: Setup .NET 9.0 (observe download)
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '9.0'
+
+      - name: Record post-install state
+        run: |
+          echo "= Installed .NET SDKs ="
+          dotnet --list-sdks
+        shell: bash
