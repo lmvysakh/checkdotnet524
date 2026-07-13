@@ -73,6 +73,8 @@ jobs:
           echo ""
           echo " Dotnet version "
           dotnet --version
+          echo " Dotnet info "
+          dotnet --info
           echo ""
           echo " Dotnet location "
           which dotnet || where dotnet
