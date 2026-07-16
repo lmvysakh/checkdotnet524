@@ -1,5 +1,5 @@
 name: Self-Hosted Test with pre installed and non pre installed .NET SDKs
-
+ 
 on:
   workflow_dispatch:
   push:
