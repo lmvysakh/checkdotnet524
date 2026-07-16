@@ -29,21 +29,24 @@ jobs:
           dotnet-version: '11.0.100-preview.5.26302.115'
 
 
-      - name: Record post-install state
-        run: |
-          Write-Host " Installed .NET SDKs "
-          dotnet --list-sdks
-          Write-Host ""
-          Write-Host " dotnet version "
-          dotnet --version
-        shell: powershell
+      # - name: Record post-install state
+      #   run: |
+      #     Write-Host " Installed .NET SDKs "
+      #     dotnet --list-sdks
+      #     Write-Host ""
+      #     Write-Host " dotnet version "
+      #     dotnet --version
+      #   shell: powershell
 
-      - name: Clear dotnet cache
-        run: rm -rf ${{ runner.temp }}/.dotnet
-      - name: Clear dotnet cache
-        if: runner.os != 'Windows'
-        run: rm -rf $HOME/.dotnet
-      - name: Clear dotnet cache (Windows)
-        if: runner.os == 'Windows'
-        run: Remove-Item -Recurse -Force $env:USERPROFILE\.dotnet
+      - name: Remove all .NET SDK caches
+        run: |
+          Write-Host "=== Listing and deleting all dotnet SDK caches ==="
+          $caches = gh cache list --repo ${{ github.repository }} --json key --jq '.[].key' | Where-Object { $_ -match "dotnet-sdk" }
+          foreach ($cache in $caches) {
+            Write-Host "Deleting: $cache"
+            gh cache delete "$cache" --repo ${{ github.repository }}
+          }
+          if (-not $caches) { Write-Host "No dotnet SDK caches found" }
         shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
