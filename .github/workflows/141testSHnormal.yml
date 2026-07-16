@@ -1,0 +1,43 @@
+name: Self-Hosted Test with pre installed and non pre installed .NET SDKs
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  install-dotnet:
+    name: Install .NET 
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Record pre-install state
+        run: |
+          Write-Host "=== Existing .NET SDKs ==="
+          try { dotnet --list-sdks } catch { Write-Host "No dotnet found" }
+          Write-Host ""
+          Write-Host "=== Environment ==="
+          Write-Host "DOTNET_INSTALL_DIR=$($env:DOTNET_INSTALL_DIR ?? '<not set>')"
+        shell: powershell
+
+      - name: Setup .NET 8.0 
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0'
+
+      - name: Setup .NET 11 Preview
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '11.0.100-preview.5.26302.115'
+
+
+      - name: Record post-install state
+        run: |
+          Write-Host " Installed .NET SDKs "
+          dotnet --list-sdks
+          Write-Host ""
+          Write-Host " dotnet version "
+          dotnet --version
+        shell: powershell
