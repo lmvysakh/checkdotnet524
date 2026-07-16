@@ -13,14 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Record pre-install state
-        run: |
-          Write-Host "=== Existing .NET SDKs ==="
-          try { dotnet --list-sdks } catch { Write-Host "No dotnet found" }
-          Write-Host ""
-          Write-Host "=== Environment ==="
-          Write-Host "DOTNET_INSTALL_DIR=$($env:DOTNET_INSTALL_DIR ?? '<not set>')"
-        shell: powershell
+      # - name: Record pre-install state
+      #   run: |
+      #     Write-Host "=== Existing .NET SDKs ==="
+      #     try { dotnet --list-sdks } catch { Write-Host "No dotnet found" }
+      #     Write-Host ""
+      #     Write-Host "=== Environment ==="
+      #     Write-Host "DOTNET_INSTALL_DIR=$($env:DOTNET_INSTALL_DIR ?? '<not set>')"
+      #   shell: powershell
 
       - name: Setup .NET 8.0 
         uses: actions/setup-dotnet@v6
