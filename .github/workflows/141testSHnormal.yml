@@ -37,3 +37,13 @@ jobs:
           Write-Host " dotnet version "
           dotnet --version
         shell: powershell
+
+      - name: Clear dotnet cache
+        run: rm -rf ${{ runner.temp }}/.dotnet
+      - name: Clear dotnet cache
+        if: runner.os != 'Windows'
+        run: rm -rf $HOME/.dotnet
+      - name: Clear dotnet cache (Windows)
+        if: runner.os == 'Windows'
+        run: Remove-Item -Recurse -Force $env:USERPROFILE\.dotnet
+        shell: powershell
